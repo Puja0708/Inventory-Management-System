@@ -1,0 +1,30 @@
+
+Coded by Philip V. Naparan
+Visit: www.naparansoft.cjb.net
+
+			"Instruction Before Running"
+
+Directory ---------------------------------------------------------------------------
+
+step 1  : make directory "Naparansoft Inventory" in c:
+step 2  : copy all the files in this directory to c:\Naparansoft Inventory directory
+
+c:\Autoexec.bat ---------------------------------------------------------------------
+
+-Assummming that u have installed jdk in c:\jdk1.4.1 directory
+-Add these lines in c:\Autoexec.bat - Restart your Computer to take effect)
+
+step 3  : SET PATH=c:\jdk1.4.1\bin
+
+ODBC Settings -----------------------------------------------------------------------
+
+step 4  : click control panel
+step 5  : ODBC Data Sources
+step 6  : click UserDSN Tab
+step 7  : click ADD Button , Select Microsoft Access Driver , Finish 
+step 11 : Give Datasource Name as  "NaparansoftInventory"
+step 12 : Click Select button and select MasterFile.mdb from "c:\Naparansoft Inventory\MasterFile.mdb" click ok and click ok finish
+
+Run ---------------------------------------------------------------------------------
+
+step 13 :  Execute the "Naparansoft Inventory.bat" located in "c:\Naparansoft Inventory"

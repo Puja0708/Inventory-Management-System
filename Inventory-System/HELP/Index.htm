@@ -1,0 +1,887 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0023)http://www.addu.edu.ph/ -->
+<HTML><HEAD><TITLE>Ateneo de Davao University</TITLE>
+<META content=en-us http-equiv=Content-Language>
+<META content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
+<SCRIPT language=JavaScript>
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+// -->
+</SCRIPT>
+
+<SCRIPT language=JavaScript>
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+// -->
+
+
+</SCRIPT>
+
+<SCRIPT language=JavaScript>
+<!--
+
+var isDOM = (document.getElementById ? true : false); 
+var isIE4 = ((document.all && !isDOM) ? true : false);
+var isNS4 = (document.layers ? true : false);
+function getRef(id) {
+if (isDOM) return document.getElementById(id);
+if (isIE4) return document.all[id];
+if (isNS4) return document.layers[id];
+}
+function getSty(id) {
+return (isNS4 ? getRef(id) : getRef(id).style);
+} 
+// Hide timeout.
+var popTimer = 0;
+// Array showing highlighted menu items.
+var litNow = new Array();
+function popOver(menuNum, itemNum) {
+clearTimeout(popTimer);
+hideAllBut(menuNum);
+litNow = getTree(menuNum, itemNum);
+changeCol(litNow, true);
+targetNum = menu[menuNum][itemNum].target;
+if (targetNum > 0) {
+thisX = parseInt(menu[menuNum][0].ref.left) + parseInt(menu[menuNum][itemNum].ref.left);
+thisY = parseInt(menu[menuNum][0].ref.top) + parseInt(menu[menuNum][itemNum].ref.top);
+with (menu[targetNum][0].ref) {
+left = parseInt(thisX + menu[targetNum][0].x);
+top = parseInt(thisY + menu[targetNum][0].y);
+visibility = 'visible';
+      }
+   }
+}
+function popOut(menuNum, itemNum) {
+if ((menuNum == 0) && !menu[menuNum][itemNum].target)
+hideAllBut(0)
+else
+popTimer = setTimeout('hideAllBut(0)', 500);
+}
+function getTree(menuNum, itemNum) {
+
+// Array index is the menu number. The contents are null (if that menu is not a parent)
+// or the item number in that menu that is an ancestor (to light it up).
+itemArray = new Array(menu.length);
+
+while(1) {
+itemArray[menuNum] = itemNum;
+// If we've reached the top of the hierarchy, return.
+if (menuNum == 0) return itemArray;
+itemNum = menu[menuNum][0].parentItem;
+menuNum = menu[menuNum][0].parentMenu;
+   }
+}
+
+// Pass an array and a boolean to specify colour change, true = over colour.
+function changeCol(changeArray, isOver) {
+for (menuCount = 0; menuCount < changeArray.length; menuCount++) {
+if (changeArray[menuCount]) {
+newCol = isOver ? menu[menuCount][0].overCol : menu[menuCount][0].backCol;
+// Change the colours of the div/layer background.
+with (menu[menuCount][changeArray[menuCount]].ref) {
+if (isNS4) bgColor = newCol;
+else backgroundColor = newCol;
+         }
+      }
+   }
+}
+function hideAllBut(menuNum) {
+var keepMenus = getTree(menuNum, 1);
+for (count = 0; count < menu.length; count++)
+if (!keepMenus[count])
+menu[count][0].ref.visibility = 'hidden';
+changeCol(litNow, false);
+}
+
+// *** MENU CONSTRUCTION FUNCTIONS ***
+
+function Menu(isVert, popInd, x, y, width, overCol, backCol, borderClass, textClass) {
+// True or false - a vertical menu?
+this.isVert = isVert;
+// The popout indicator used (if any) for this menu.
+this.popInd = popInd
+// Position and size settings.
+this.x = x;
+this.y = y;
+this.width = width;
+// Colours of menu and items.
+this.overCol = overCol;
+this.backCol = backCol;
+// The stylesheet class used for item borders and the text within items.
+this.borderClass = borderClass;
+this.textClass = textClass;
+// Parent menu and item numbers, indexed later.
+this.parentMenu = null;
+this.parentItem = null;
+// Reference to the object's style properties (set later).
+this.ref = null;
+}
+
+function Item(text, href, frame, length, spacing, target) {
+this.text = text;
+this.href = href;
+this.frame = frame;
+this.length = length;
+this.spacing = spacing;
+this.target = target;
+// Reference to the object's style properties (set later).
+this.ref = null;
+}
+
+function writeMenus() {
+if (!isDOM && !isIE4 && !isNS4) return;
+
+for (currMenu = 0; currMenu < menu.length; currMenu++) with (menu[currMenu][0]) {
+// Variable for holding HTML for items and positions of next item.
+var str = '', itemX = 0, itemY = 0;
+
+// Remember, items start from 1 in the array (0 is menu object itself, above).
+// Also use properties of each item nested in the other with() for construction.
+for (currItem = 1; currItem < menu[currMenu].length; currItem++) with (menu[currMenu][currItem]) {
+var itemID = 'menu' + currMenu + 'item' + currItem;
+
+// The width and height of the menu item - dependent on orientation!
+var w = (isVert ? width : length);
+var h = (isVert ? length : width);
+
+// Create a div or layer text string with appropriate styles/properties.
+// Thanks to Paul Maden (www.paulmaden.com) for helping debug this in IE4, apparently
+// the width must be a miniumum of 3 for it to work in that browser.
+if (isDOM || isIE4) {
+str += '<div id="' + itemID + '" style="position: absolute; left: ' + itemX + '; top: ' + itemY + '; width: ' + w + '; height: ' + h + '; visibility: inherit; ';
+if (backCol) str += 'background: ' + backCol + '; ';
+str += '" ';
+}
+if (isNS4) {
+str += '<layer id="' + itemID + '" left="' + itemX + '" top="' + itemY + '" width="' +  w + '" height="' + h + '" visibility="inherit" ';
+if (backCol) str += 'bgcolor="' + backCol + '" ';
+}
+if (borderClass) str += 'class="' + borderClass + '" ';
+
+// Add mouseover handlers and finish div/layer.
+str += 'onMouseOver="popOver(' + currMenu + ',' + currItem + ')" onMouseOut="popOut(' + currMenu + ',' + currItem + ')">';
+
+// Add contents of item (default: table with link inside).
+// In IE/NS6+, add padding if there's a border to emulate NS4's layer padding.
+// If a target frame is specified, also add that to the <a> tag.
+
+str += '<table width="' + (w - 8) + '" border="0" cellspacing="0" cellpadding="' + (!isNS4 && borderClass ? 3 : 0) + '"><tr><td align="left" height="' + (h - 7) + '">' + '<a class="' + textClass + '" href="' + href + '"' + (frame ? ' target="' + frame + '">' : '>') + text + '</a></td>';
+if (target > 0) {
+
+// Set target's parents to this menu item.
+menu[target][0].parentMenu = currMenu;
+menu[target][0].parentItem = currItem;
+
+// Add a popout indicator.
+if (popInd) str += '<td class="' + textClass + '" align="right">' + popInd + '</td>';
+}
+str += '</tr></table>' + (isNS4 ? '</layer>' : '</div>');
+if (isVert) itemY += length + spacing;
+else itemX += length + spacing;
+}
+if (isDOM) {
+var newDiv = document.createElement('div');
+document.getElementsByTagName('body').item(0).appendChild(newDiv);
+newDiv.innerHTML = str;
+ref = newDiv.style;
+ref.position = 'absolute';
+ref.visibility = 'hidden';
+}
+
+// Insert a div tag to the end of the BODY with menu HTML in place for IE4.
+if (isIE4) {
+document.body.insertAdjacentHTML('beforeEnd', '<div id="menu' + currMenu + 'div" ' + 'style="position: absolute; visibility: hidden">' + str + '</div>');
+ref = getSty('menu' + currMenu + 'div');
+}
+
+// In NS4, create a reference to a new layer and write the items to it.
+if (isNS4) {
+ref = new Layer(0);
+ref.document.write(str);
+ref.document.close();
+}
+
+for (currItem = 1; currItem < menu[currMenu].length; currItem++) {
+itemName = 'menu' + currMenu + 'item' + currItem;
+if (isDOM || isIE4) menu[currMenu][currItem].ref = getSty(itemName);
+if (isNS4) menu[currMenu][currItem].ref = ref.document[itemName];
+   }
+}
+with(menu[0][0]) {
+ref.left = x;
+ref.top = y;
+ref.visibility = 'visible';
+   }
+}
+
+var menu = new Array();
+
+// Default colours passed to most menu constructors (just passed to functions, not
+// a global variable - makes things easier to change later in bulk).
+
+var defOver = '#000033', defBack = '999999';
+
+
+// Default 'length' of menu items - item height if menu is vertical, width if horizontal.
+var defLength = 21;
+
+// Menu 0 is the special, 'root' menu from which everything else arises.
+menu[0] = new Array();
+// A non-vertical menu with a few different colours and no popout indicator, as an example.
+// *** MOVE ROOT MENU AROUND HERE ***  it's positioned at (5, 0) and is 17px high now.
+menu[0][0] = new Menu(false, '', (screen.width/2)-300  ,112, 17, '', '', '', 'itemText2');
+// Notice how the targets are all set to nonzero values...
+// The 'length' of each of these items is 100, and there is spacing of 5 to the next item.
+// Most of the links are set to '#' hashes, make sure you change them to actual files.
+menu[0][1] = new Item('University Info' , '', '_self', 92, 5, 1);
+menu[0][2] = new Item('School Units', '', '_self', 80, 5, 2);
+menu[0][3] = new Item('Student Services', '', '_self', 125, 5, 3);
+menu[0][4] = new Item('University Links', '', '_self', 98, 5, 4);
+menu[0][5] = new Item('Contact', '', '_self', 20, 5, 5);
+// An example of a link with a target frame/window as well...
+//menu[0][5] = new Item('  About', 'http://www.geocities.com/mjavier22', '_new', 40, 50, 0);
+
+// File menu.
+menu[1] = new Array();
+// The File menu is positioned 0px across and 22 down from its trigger, and is 80 wide.
+// All text in this menu has the stylesheet class 'item' -- see the <style> section above.
+// We've passed a 'greater-than' sign '>' as a popout indicator. Try an image...?
+menu[1][0] = new Menu(true, '>', 0, 22, 150, defOver, defBack, 'itemBorder', 'itemText');
+menu[1][1] = new Item('Mission / Vision', 'UnivInfo/missionvision.htm', '_self', defLength, 1, 0);
+menu[1][2] = new Item('Goals', 'UnivInfo/goals.htm', '_self', defLength, 1, 0);
+menu[1][3] = new Item('Historical Background', 'UnivInfo/histo.htm', '_self', defLength, 1, 0);
+menu[1][4] = new Item('Campus Map', 'UnivInfo/campusmap.htm', '_self', defLength, 1, 0);
+
+// Non-zero target means this will trigger a popout -- menu[4] which is the 'Reopen' menu.
+//menu[1][4] = new Item('Delete Topic', 'del_top.htm', '', defLength, 1, 0);
+
+
+
+// Edit menu.
+menu[2] = new Array();
+menu[2][0] = new Menu(true, '>', 0, 22, 220, defOver, defBack, 'itemBorder', 'itemText');
+menu[2][1] = new Item('School of Arts & Sciences', 'college/cas/cas.html', '_self', defLength, 1, 0);
+menu[2][2] = new Item('School of Business & Governance', 'college/sbg/index.html', '_self', defLength, 1, 0);
+menu[2][3] = new Item('College of Nursing', 'admission/nursing1.html', '_self', defLength, 1, 0);
+menu[2][4] = new Item('Law School', 'admission/lawschool.html', '_self', defLength, 1, 0);
+menu[2][5] = new Item('High School', 'highschool/index.php', '_self', defLength, 1, 0);
+menu[2][6] = new Item('Grade School', 'gradeschool/index.html', '_self', defLength, 1, 0);
+
+// Student Services menu
+menu[3] = new Array();
+menu[3][0] = new Menu(true, '<', 0, 22, 200, defOver, defBack, 'itemBorder', 'itemText');
+menu[3][1] = new Item('Course Programs', 'http://www.addu.edu.ph/admission/prospectus.html', '_self', defLength, 1, 0);
+menu[3][2] = new Item('Admission Requirements', 'http://www.addu.edu.ph/admission/index.html', '_self', defLength, 1, 0);
+menu[3][3] = new Item('Scholarship Grants', 'http://www.addu.edu.ph/admission/scholar.html', '_self', defLength, 1, 0);
+menu[3][4] = new Item('Library Services', 'http://www.addu.edu.ph/library/index.html', '_self', defLength, 1, 0);
+menu[3][5] = new Item('Web Syllabi', 'http://magisw.addu.edu.ph/syllabi/indexsyl.html', '_self', defLength, 1, 0);
+menu[3][6] = new Item('Facilities', '', '_self', defLength, 1, 0);
+menu[3][7] = new Item('Student Organizations', '', '_self', defLength, 1, 0);
+
+// Link menu.
+menu[4] = new Array();
+menu[4][0] = new Menu(true, '>', 0, 22, 150, defOver, defBack, 'itemBorder', 'itemText');
+menu[4][1] = new Item('University President', 'http://www.addu.edu.ph/press/index.html', '_blank', defLength, 1, 0);
+menu[4][2] = new Item('Ateneo Gateway', 'UnivLinks/addu gate.html', '_blank', defLength, 1, 0);
+menu[4][3] = new Item('Campus Links', 'UnivLinks/campuslinks.htm', '_self', defLength, 1, 0);
+menu[4][4] = new Item('RSTC', 'http://www.addu.edu.ph/college/rstc/index.html', '_self', defLength, 1, 0);
+
+// Contact menu.
+menu[5] = new Array();
+menu[5][0] = new Menu(true, '>', 0, 22, 150, defOver, defBack, 'itemBorder', 'itemText');
+menu[5][1] = new Item('AdDU Webteam', 'Misc/AdduWebteam.htm', '_self', defLength, 1, 0);
+menu[5][2] = new Item('Directory', 'http://www.addu.edu.ph/admission/coord.html', '_self', defLength, 1, 0);
+
+
+
+var popOldWidth = window.innerWidth;
+nsResizeHandler = new Function('if (popOldWidth != window.innerWidth) location.reload()');
+
+
+// This is a quick snippet that captures all clicks on the document and hides the menus
+// every time you click. Use if you want.
+
+if (isNS4) document.captureEvents(Event.CLICK);
+document.onclick = clickHandle;
+
+function clickHandle(evt)
+{
+ if (isNS4) document.routeEvent(evt);
+ hideAllBut(0);
+}
+
+
+// This is just the moving command for the example.
+
+function moveRoot()
+{
+ with(menu[0][0].ref) left = ((parseInt(left) < 100) ? 100 : 5);
+}
+//  End -->
+//-->
+</SCRIPT>
+<!-- *** IMPORTANT STYLESHEET SECTION - Change the border classes and text colours *** -->
+<STYLE>.itemBorder {
+	BORDER-BOTTOM: black 1px outset; BORDER-LEFT: black 1px outset; BORDER-RIGHT: black 1px outset; BORDER-TOP: black 1px outset; Z-INDEX: 1
+}
+.itemText {
+	COLOR: #ffffff; FONT: 11px Verdana, Helvetica; TEXT-DECORATION: none; Z-INDEX: 1
+}
+.itemText2 {
+	COLOR: #000033; FONT: 11px Verdana, Helvetica; TEXT-DECORATION: none; Z-INDEX: 1
+}
+</STYLE>
+<!-- SETS THE STYLE OF A HYPERLINK: UNDERLINE SHOWN IF MOUSE OVER -->
+<STYLE type=text/css>A.linkbttm {
+	TEXT-DECORATION: none
+}
+A.linkbttm:hover {
+	TEXT-DECORATION: underline
+}
+.linkbttm {
+	COLOR: #0000cc; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; FONT-SIZE: 10px; TEXT-DECORATION: none
+}
+A.Univ {
+	COLOR: #010145; FONT-FAMILY: Arial, Helvetica, sans-serif; FONT-SIZE: 11px; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A.Univ:hover {
+	COLOR: #010145; FONT-FAMILY: Arial, Helvetica, sans-serif; FONT-SIZE: 11px; FONT-WEIGHT: bold; TEXT-DECORATION: underline
+}
+A.web {
+	COLOR: #ffffff; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; FONT-SIZE: 10px; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A.web:hover {
+	COLOR: #ffffff; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; FONT-SIZE: 10px; FONT-WEIGHT: bold; TEXT-DECORATION: underline
+}
+A.contents {
+	COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; FONT-SIZE: 11px; TEXT-DECORATION: none
+}
+A.contents:hover {
+	COLOR: #000066; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; FONT-SIZE: 11px; FONT-WEIGHT: bold; TEXT-DECORATION: underline
+}
+A.campus {
+	COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; FONT-SIZE: 10px; TEXT-DECORATION: none
+}
+A.campus:hover {
+	COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; FONT-SIZE: 10px; FONT-WEIGHT: bold; TEXT-DECORATION: underline
+}
+A.temp {
+	COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; FONT-SIZE: 11px; TEXT-DECORATION: none
+}
+A.temp:hover {
+	COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; FONT-SIZE: 11px; TEXT-DECORATION: none
+}
+</STYLE>
+
+<META content="MSHTML 5.00.2919.6307" name=GENERATOR></HEAD>
+<BODY bgColor=#000033 leftMargin=0 onload=writeMenus(); botmargin="0" 
+marginheight="0" marginwidth="0">
+<CENTER>
+<TABLE bgColor=#ffffff border=0 cellPadding=0 cellSpacing=0 width=700>
+  <TBODY>
+  <TR>
+    <TD height=128 vAlign=top width=700><IMG border=0 height=128 
+      src="Ateneo de Davao University_files/addu.jpg" useMap=#Map 
+  width=700></TD></TR></TBODY></TABLE></CENTER>
+<CENTER>
+<TABLE bgColor=#ffffff border=0 cellPadding=0 cellSpacing=0 class=contents 
+width=700><!--DWLayoutTable-->
+  <TBODY>
+  <TR>
+    <TD height=4 width=8></TD>
+    <TD width=12></TD>
+    <TD width=145></TD>
+    <TD width=46></TD>
+    <TD width=54></TD>
+    <TD width=27></TD>
+    <TD width=31></TD>
+    <TD width=58></TD>
+    <TD width=5></TD>
+    <TD width=176></TD>
+    <TD width=121></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=7 width=8></TD>
+    <TD width=12></TD>
+    <TD width=145></TD>
+    <TD width=46></TD>
+    <TD width=54></TD>
+    <TD width=27></TD>
+    <TD width=31></TD>
+    <TD width=58></TD>
+    <TD width=5></TD>
+    <TD width=176></TD>
+    <TD rowSpan=2 vAlign=top width=121>
+      <DIV align=right><FONT color=#000033 face="Arial, Helvetica, sans-serif" 
+      size=1>
+      <SCRIPT class=ateneo language=JavaScript>
+              Stamp = new Date();
+              year = Stamp.getYear();
+              if (year < 2000) year = 1900 + year;
+              month = Stamp.getMonth() + 1;
+              if (month == 1) month = 'January';
+              if (month == 2) month = 'February';
+              if (month == 3) month = 'March';
+              if (month == 4) month = 'April';
+              if (month == 5) month = 'May';
+              if (month == 6) month = 'June';
+              if (month == 7) month = 'July';
+              if (month == 8) month = 'August';
+              if (month == 9) month = 'September';
+              if (month == 10) month = 'October';
+              if (month == 11) month = 'November';
+              if (month == 12) month = 'December';
+              document.write(month + " " + Stamp.getDate()+ ", " + year );
+              </SCRIPT>
+      </FONT></DIV></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=12 width=8></TD>
+    <TD colSpan=7 rowSpan=5 vAlign=top width=373><IMG height=186 
+      src="Ateneo de Davao University_files/cover-ani.gif" width=320></TD>
+    <TD width=5></TD>
+    <TD width=176></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=7 width=8></TD>
+    <TD width=5></TD>
+    <TD width=176></TD>
+    <TD width=121></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=98 width=8></TD>
+    <TD width=5>&nbsp;</TD>
+    <TD colSpan=2 vAlign=top width=297>
+      <TABLE border=0 cellPadding=0 cellSpacing=0 height=395 width=271><!--DWLayoutTable-->
+        <TBODY>
+        <TR>
+          <TD height=22 vAlign=top width=271><FONT color=#990000 
+            face="Courier New, Courier, mono" size=2><STRONG>t o p n e w 
+            s</STRONG></FONT></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top><A class=contents 
+            href="http://www.geocities.com/rbhalabaso/nasweicop.html">&#8226; 
+            </A><FONT color=#000000 face="Verdana, Arial, Helvetica, sans-serif" 
+            size=1><A class=contents 
+            href="http://www.geocities.com/rbhalabaso/nasweicop.html" 
+            target=_blank>PAPP-NASWEI Culture of Peace Seminar for Social 
+            Workers</A></FONT></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top><A class=contents 
+            href="http://www.proquest.com/pqdauto">&#8226; </A><FONT color=#000000 
+            face="Verdana, Arial, Helvetica, sans-serif" size=1><A 
+            class=contents href="http://www.proquest.com/pqdauto">ProQuest 
+            Academic Research<BR>Library Database</A></FONT></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top><A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/firmdonates.htm">&#8226; 
+            Firm Donates for Lumad Scholars</A></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271><A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/scholarship.htm">&#8226; 
+            Scholarship Grants</A></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271><A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/foodcourt.htm">&#8226; 
+            Ateneo Jacinto Food Court</A></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271><A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/atm.htm">&#8226; New ATM 
+            Machine</A> </TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271><A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/shotdead.htm">&#8226; 
+            Ateneo Student shot dead</A></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271><A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/cpa_may2003_acc.htm">&#8226; 
+            Successful graduates of the <BR>Accountancy Program last May 2003 
+            <BR>CPA Board Examinations</A> </TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271><A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/cpa_may2003_rev.htm">&#8226; 
+            Successful reviewees of the CPA <BR>Review Center last May 2003 CPA 
+            <BR>Board Examinations</A></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271><A class=contents 
+            href="http://www.addu.edu.ph/taskforcekenneth/martinez_statement.htm">&#8226; 
+            Ateneo Condemns March 4<BR>Terrorist Attack</A></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271><A class=contents 
+            href="http://www.addu.edu.ph/taskforcekenneth/index.html">&#8226; TASK 
+            FORCE KENNETH</A></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271><A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/bpiawards.htm">&#8226; 
+            Ateneo Student Scientists to Get <BR>BPI Science Awards</A></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271><A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/homecoming.htm">&#8226; A 
+            Phenomenal Homecoming of Blue Knights</A></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271><A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/todokain.htm">&#8226; Todo 
+            Kain, Todo Inom, Todo Saya</A></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271><A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/night.htm">&#8226; Night 
+            of the Blue Knights</A></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271><A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/carpio.htm">&#8226; 
+            Justice Antonio Tirol Carpio Named as Ateneo Distinguished 
+            Alumnus</A></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271></TD></TR>
+        <TR>
+          <TD height=3 vAlign=top width=271>
+            <P><A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/retreat2002.htm">&#8226; 
+            Faculty Retreat 2002</A></P></TD></TR></TBODY></TABLE>
+      <P>&nbsp;</P></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=59 width=8></TD>
+    <TD width=5>&nbsp;</TD>
+    <TD colSpan=2 vAlign=top width=297>
+      <TABLE border=0 cellPadding=0 cellSpacing=0 width="100%"><!--DWLayoutTable-->
+        <TBODY>
+        <TR>
+          <TD height=18 vAlign=top width=336><FONT color=#006633 
+            face="Courier New, Co rier, mono" size=2><STRONG>e v e n t 
+            s</STRONG></FONT><FONT color=#ff8000 
+            face="Courier New, Courier, mono" size=2>&nbsp;</FONT></TD></TR>
+        <TR>
+          <TD height=32 vAlign=top><FONT color=#000000 
+            face="Verdana, Arial, Helvetica, sans-serif" size=1><A 
+            class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/retreat2002.htm">&#8226;</A> 
+            <A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/msdn.htm">First Ever 
+            MSDN Academic .NET Event in Southern Philippines to be Held in 
+            Ateneo</A></FONT></TD></TR>
+        <TR>
+          <TD height=32 vAlign=top><FONT color=#000000 
+            face="Verdana, Arial, Helvetica, sans-serif" size=1><A 
+            class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/retreat2002.htm">&#8226;</A> 
+            <A class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/proquest.htm">Launching 
+            of ProQuest Academic Research<BR>Library Database: the online 
+            journals and magazines</A></FONT></TD></TR>
+        <TR>
+          <TD height=12 vAlign=top><FONT color=#000000 
+            face="Verdana, Arial, Helvetica, sans-serif" size=1><A 
+            class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/retreat2002.htm">&#8226;</A> 
+            <A class=contents 
+            href="http://www.addu.edu.ph/sas/events/dance_cheering_2003/">Fiesta 
+            2003 Cheering and Dance Competition</A></FONT></TD></TR>
+        <TR>
+          <TD height=12 vAlign=top><FONT color=#000000 
+            face="Verdana, Arial, Helvetica, sans-serif" size=1>&#8226; <A 
+            class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/Ignatius.htm">Ateneans 
+            pay tribute to St. Ignatius <BR>last July 31, 2003</A></FONT></TD></TR>
+        <TR>
+          <TD height=4></TD></TR>
+        <TR>
+          <TD height=13 vAlign=top><FONT color=#000000 
+            face="Verdana, Arial, Helvetica, sans-serif" size=1>&#8226; </FONT><FONT 
+            color=#000000 face="Verdana, Arial, Helvetica, sans-serif" size=2><A 
+            class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/Palaro.htm">Ateneans 
+            join University Intramurals</A></FONT></TD></TR></TBODY></TABLE></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=2 width=8></TD>
+    <TD width=5></TD>
+    <TD width=176></TD>
+    <TD width=121></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=18 width=8></TD>
+    <TD width=12></TD>
+    <TD width=145></TD>
+    <TD width=46></TD>
+    <TD width=54></TD>
+    <TD width=27></TD>
+    <TD width=31></TD>
+    <TD width=58></TD>
+    <TD width=5></TD>
+    <TD colSpan=2 rowSpan=5 vAlign=top width=297>
+      <TABLE border=0 cellPadding=0 cellSpacing=0 width="100%"><!--DWLayoutTable-->
+        <TBODY>
+        <TR>
+          <TD height=16 vAlign=" op" width=336><FONT color=#006633 
+            face="Courier New, Co rier, mono" size=2>&nbsp;</FONT></TD></TR>
+        <TR>
+          <TD height=4></TD></TR>
+        <TR>
+          <TD height=16 vAlign=top>
+            <P><FONT color=#000000 face="Verdana, Arial, Helvetica, sans-serif" 
+            size=1></FONT></P></TD></TR>
+        <TR>
+          <TD height=4></TD></TR></TBODY></TABLE></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=2 width=8></TD>
+    <TD width=12></TD>
+    <TD width=145></TD>
+    <TD width=46></TD>
+    <TD colSpan=2 rowSpan=3 vAlign=top width=81><IMG border=0 height=38 
+      src="Ateneo de Davao University_files/Mustsee.jpg" useMap=#Map4 
+    width=78></TD>
+    <TD width=31></TD>
+    <TD width=58></TD>
+    <TD width=5></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=28 width=8></TD>
+    <TD width=12></TD>
+    <TD colSpan=2 vAlign=top width=191><FONT color=#000066 
+      face="Arial, Helvetica, sans-serif"><A class=Univ 
+      href="http://www.addu.edu.ph/Misc/AboutUs.htm">Learn more about the 
+      University</A></FONT></TD>
+    <TD width=31>&nbsp;</TD>
+    <TD width=58>&nbsp;</TD>
+    <TD width=5>&nbsp;</TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=8 width=8></TD>
+    <TD width=12></TD>
+    <TD width=145></TD>
+    <TD width=46></TD>
+    <TD width=31></TD>
+    <TD width=58></TD>
+    <TD width=5></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=12 width=8></TD>
+    <TD width=12></TD>
+    <TD width=145></TD>
+    <TD width=46></TD>
+    <TD width=54></TD>
+    <TD width=27></TD>
+    <TD width=31></TD>
+    <TD width=58></TD>
+    <TD width=5></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=3 width=8></TD>
+    <TD width=12></TD>
+    <TD colSpan=3 rowSpan=2 vAlign=top width=245><PRE><FONT color=#000066 face="Arial, Helvetica, sans-serif"><A class=Univ href="http://www.addu.edu.ph/admission/coord.html">Contact Us: 
+Ateneo de Davao University
+E Jacinto Street  8016 Davao City 
+Philippines</A></FONT></PRE></TD>
+    <TD width=27></TD>
+    <TD width=31></TD>
+    <TD width=58></TD>
+    <TD width=5></TD>
+    <TD width=176></TD>
+    <TD width=121></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=39 width=8></TD>
+    <TD width=12></TD>
+    <TD width=27></TD>
+    <TD width=31></TD>
+    <TD width=58></TD>
+    <TD width=5></TD>
+    <TD colSpan=2 rowSpan=2 vAlign=top width=297>
+      <TABLE border=0 cellPadding=0 cellSpacing=0 height=88 width="100%"><!--DWLayoutTable-->
+        <TBODY>
+        <TR>
+          <TD height=16 vAlign=top width=336><FONT color=#990066 
+            face="Courier New, Courier, mono" size=2><STRONG>f e a t u r e 
+            s</STRONG></FONT><FONT color=#000000 
+            face="Verdana, Arial, Helvetica, sans-serif" size=1>&nbsp; 
+        </FONT></TD></TR>
+        <TR>
+          <TD height=13 vAlign=top><FONT color=#000000 
+            face="Verdana, Arial, Helvetica, sans-serif" size=1>&#8226; </FONT><A 
+            class=contents 
+            href="http://www.addu.edu.ph/UnivLinks/UnivNews/Finster.htm">A 
+            Tribute to Fr. Finster</A></TD></TR>
+        <TR>
+          <TD height=4></TD></TR>
+        <TR>
+          <TD height=13 vAlign=top><FONT color=#000000 
+            face="Verdana, Arial, Helvetica, sans-serif" size=1>&#8226; <A 
+            class=contents 
+            href="http://www.addu.edu.ph/UnivInfo/campusmap/BotanicalGarden.htm">Jacinto 
+            Botanical Garden</A></FONT></TD></TR>
+        <TR>
+          <TD height=4></TD></TR>
+        <TR>
+          <TD height=20 vAlign=top><FONT 
+            face="Verdana, Arial, Helvetica, sans-serif" size=1>&#8226; <A 
+            class=contents 
+            href="http://www.addu.edu.ph/Kadayawan/Kadayawan.htm">Kadayawan 
+            Festival sa Davao</A></FONT></TD></TR>
+        <TR>
+          <TD align=left height=13 vAlign=top>&nbsp;</TD></TR>
+        <TR>
+          <TD align=left height=5></TD></TR></TBODY></TABLE></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=29 width=8></TD>
+    <TD colSpan=2 rowSpan=3 vAlign=top width=157>
+      <TABLE border=0 borderColor=#000000 cellPadding=0 cellSpacing=0 
+      width="100%"><!--DWLayoutTable-->
+        <FORM action=http://magisw.addu.edu.ph/college/asp_files/search_syll.asp 
+        method=get name=GO>
+        <TBODY>
+        <TR>
+          <TD height=19 vAlign=top width=104>
+            <DIV align=center><FONT face="Arial, Helvetica, sans-serif" 
+            size=2><FONT color=#000066><A 
+            href="http://magisw.addu.edu.ph/syllabi/indexsyl.html" 
+            title="Ateneo Web Syllabi">Web 
+Syllabus</A></FONT></FONT></DIV></TD></TR>
+        <TR>
+          <TD height=28 vAlign=top>
+            <DIV align=center><INPUT name=cid size=10> </DIV></TD></TR>
+        <TR>
+          <TD height=33 vAlign=top>
+            <DIV align=center><INPUT name=Submit type=submit value=Search> 
+          </DIV></TD></FORM></TR></TBODY></TABLE></TD>
+    <TD colSpan=4 rowSpan=3 vAlign=top width=158>
+      <TABLE border=0 cellPadding=0 cellSpacing=0 width="100%"><!--DWLayoutTable-->
+        <FORM 
+        action="http://magisw.addu.edu.ph/college/asp_files/search_info.asp " 
+        method=get name=GO2>
+        <TBODY>
+        <TR>
+          <TD height=19 vAlign=top width=143>
+            <DIV align=center><FONT color=#000033 
+            face="Arial, Helvetica, sans-serif" size=2><FONT color=#000066><A 
+            href="http://www.addu.edu.ph/admission/prospectus.html">Undergraduate 
+            Program</A></FONT></FONT></DIV></TD></TR>
+        <TR>
+          <TD height=28 vAlign=top>
+            <DIV align=center><INPUT name=id size=10> </DIV></TD></TR>
+        <TR>
+          <TD height=33 vAlign=top>
+            <DIV align=center><INPUT name=Submit2 type=submit value=Search> 
+            </DIV></TD></TR></FORM></TBODY></TABLE></TD>
+    <TD width=58></TD>
+    <TD width=5></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=46 width=8></TD>
+    <TD width=58>&nbsp;</TD>
+    <TD width=5>&nbsp;</TD>
+    <TD colSpan=2 vAlign=top width=297>
+      <TABLE border=0 cellPadding=0 cellSpacing=0 width="100%"><!--DWLayoutTable-->
+        <TBODY>
+        <TR>
+          <TD height=16 vAlign=top width=336><FONT color=#cc3300 
+            face="Courier New, Courier, mono" size=2><STRONG>n e w &nbsp;l i n 
+            k</STRONG></FONT></TD></TR>
+        <TR>
+          <TD height=12 vAlign=top><FONT color=#000000 
+            face="Verdana, Arial, Helvetica, sans-serif" size=1>&#8226; </FONT><FONT 
+            color=#000000 face="Verdana, Arial, Helvetica, sans-serif" size=2><A 
+            class=contents href="http://www.addu.edu.ph/Addu_Debate/Main.htm" 
+            target=_blank>Ateneo Debate and Public Speaking 
+        Varsity</A></FONT></TD></TR>
+        <TR>
+          <TD height=5></TD></TR>
+        <TR>
+          <TD height=12 vAlign=top><FONT 
+            face="Verdana, Arial, Helvetica, sans-serif" size=1>More links on 
+            </FONT><FONT face="Verdana, Arial, Helvetica, sans-serif" size=2><A 
+            class=campus 
+            href="http://www.addu.edu.ph/UnivLinks/campuslinks.htm">Campus 
+            Links</A></FONT></TD></TR></TBODY></TABLE></TD>
+    <TD width=17></TD></TR>
+  <TR>
+    <TD height=6 width=8></TD>
+    <TD width=58></TD>
+    <TD width=5></TD>
+    <TD width=176></TD>
+    <TD width=121></TD>
+    <TD width=17></TD></TR></TBODY></TABLE></CENTER>
+<CENTER>
+<TABLE bgColor=#ffffff border=0 cellPadding=0 cellSpacing=0 width=700>
+  <TBODY>
+  <TR>
+    <TD height=11 width=521></TD>
+    <TD rowSpan=3 vAlign=top width=179><IMG border=0 height=90 
+      src="Ateneo de Davao University_files/tail2.jpg" useMap=#Map2 
+  width=179></TD></TR>
+  <TR>
+    <TD height=14 vAlign=top>
+      <TABLE bgColor=#ffffff border=0 cellPadding=0 cellSpacing=0 
+        width="100%"><TBODY>
+        <TR>
+          <TD height=14 vAlign=top width=521>
+            <DIV align=center></DIV></TD></TR></TBODY></TABLE></TD></TR>
+  <TR>
+    <TD height=63 vAlign=top><IMG border=0 height=63 
+      src="Ateneo de Davao University_files/tail1.jpg" useMap=#Map3 
+  width=521></TD></TR></TBODY></TABLE></CENTER><MAP name=Map3><AREA 
+  alt="Copyright 2002. All rights reserved Ateneo de Davao University. By AdDU Webteam" 
+  coords=18,26,205,58 shape=RECT 
+  title="Copyright 2003. All rights reserved Ateneo de Davao University. By AdDU Webteam"></MAP><MAP 
+name=Map><AREA alt="Ateneo de Davao University" coords=2,11,699,94 shape=RECT 
+  title="Ateneo de Davao University"><AREA alt="Ateneo de Davao University" 
+  coords=647,77,45 shape=CIRCLE title="Ateneo de Davao University"></MAP><MAP 
+name=Map2><AREA alt="Over 50 Years - Since 1948" coords=31,6,150,76 shape=RECT 
+  title="Over 50 Years - Since 1948"></MAP>
+<CENTER>
+<TABLE border=0 cellPadding=0 cellSpacing=0 width=700><!--DWLayoutTable-->
+  <TBODY>
+  <TR>
+    <TD height=2 width=700></TD></TR>
+  <TR>
+    <TD height=12 vAlign=top></TD></TR>
+  <TR>
+    <TD height=7></TD></TR>
+  <TR>
+    <TD height=12 vAlign=top><FONT color=#ffffff 
+      face="Verdana, Arial, Helvetica, sans-serif" size=1>Site last updated on 
+      <STRONG>September 2003</STRONG></FONT></TD></TR>
+  <TR>
+    <TD height=7></TD></TR>
+  <TR>
+    <TD height=36 vAlign=top><PRE><FONT color=#ffffff face="Verdana, Arial, Helvetica, sans-serif" size=1>Copyright © 2003-2004
+All rights reserved <STRONG>Ateneo de Davao University</STRONG>
+Ateneo Webteam * Email: admissions@addu.edu.ph</FONT></PRE></TD></TR></TBODY></TABLE></CENTER></BODY></HTML>
